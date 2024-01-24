@@ -1,10 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import API_ENDPOINT from '/global'
 
 const AUTH_API_URL =
-  "https://golazo-prod-api-eus.azurewebsites.net/api/Authenticate";
+API_ENDPOINT + "/api/Authentication/Login";
 const VALIDATE_API_URL =
-  "https://golazo-prod-api-eus.azurewebsites.net/api/Master/ValidateToken";
+API_ENDPOINT + "/api/Master/ValidateToken";
 
 export const login = async (username, password) => {
   try {
