@@ -18,3 +18,9 @@ export const useAuth = () => {
 
   return isAuthenticated;
 };
+
+export const checkAuth = async () => {
+  const isValid = await validateToken();
+  if (!isValid) sessionStorage.clear();
+  return isValid;
+};
