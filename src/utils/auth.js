@@ -1,11 +1,11 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import API_ENDPOINT from './global'
+import config from './config'
 
 const AUTH_API_URL =
-API_ENDPOINT + "/api/Authentication/Login";
+config.apiEndpoint + "/api/Authentication/Login";
 const VALIDATE_API_URL =
-API_ENDPOINT + "/api/Authentication/ValidateToken";
+config.apiEndpoint + "/api/Authentication/ValidateToken";
 
 export const login = async (username, password) => {
   try {
@@ -16,21 +16,28 @@ export const login = async (username, password) => {
       },
       {
         headers: {
-          "serverId": "6c0d57e1-1e3b-46be-aa7f-4b95d97c853f"
+          "serverId": config.serverId
         }
       });
     const token = response.data.token;
-    Cookies.set("token", token, { expires: 1 / 24 });
+    const userId = response.data.id;
+    const firstName = response.data.firstName;
+    const lastName = response.data.lastName;
+    sessionStorage.setItem("token", "Bearer " + token, { expires: 1 / 24 });
+    Cookies.set("userId", userId, { expires: 1 / 24 });
+    Cookies.set("firstName", firstName, { expires: 1 / 24 });
+    Cookies.set("lastName", lastName, { expires: 1 / 24 });
     return token;
   } catch (error) {
     console.error("Login failed:", error);
+    sessionStorage.clear();
     throw error;
   }
 };
 
 export const validateToken = async () => {
   try {
-    const token = "Bearer " + Cookies.get("token");
+    const token = sessionStorage.getItem("token");
     const response = await axios.post(VALIDATE_API_URL, {},
       { 
         headers: {
@@ -40,6 +47,7 @@ export const validateToken = async () => {
     return response.data.isValid;
   } catch (error) {
     console.error("Token validation failed:", error);
+    sessionStorage.clear();
     return false;
   }
 };
