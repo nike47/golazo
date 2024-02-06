@@ -31,6 +31,7 @@ export const login = async (username, password) => {
   } catch (error) {
     console.error("Login failed:", error);
     sessionStorage.clear();
+    Cookies.clear();
     throw error;
   }
 };
@@ -48,6 +49,7 @@ export const validateToken = async () => {
   } catch (error) {
     console.error("Token validation failed:", error);
     sessionStorage.clear();
+    Cookies.clear();
     return false;
   }
 };
